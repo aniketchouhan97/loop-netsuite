@@ -212,7 +212,7 @@
         <div class="find">
           <aside>
             <ion-list>
-               <ion-item lines="none">
+              <ion-item lines="none">
                 <ion-select :label="translate('Account Type')" interface="popover" v-model="selectedNSAccount" @ion-change="changeAccountType">
                   <ion-select-option v-for="ns in nsCredentialsList" :key="ns.systemMessageRemoteId" :value="ns.systemMessageRemoteId">                  
                     {{ translate(ns.accountType) }}
@@ -367,10 +367,7 @@ onIonViewDidEnter(async () => {
 const segmentChanged = async(event: any) => {
   segmentSelected.value = event.detail.value;
   if (segmentSelected.value === 'dashboard') {
-    emitter.emit("presentLoader", { message: "Loading...", backdropDismiss: false });
-    await getLoopReturnStatusCount(selectedNSAccount.value);
-    await getLoopReturnStatusList("ALL");
-    emitter.emit("dismissLoader");
+    await changeAccountType();
   } 
 };
 
@@ -447,7 +444,7 @@ async function fetchUserNetSuiteDetails() {
   } 
   // set default selected account to sandbox if exists, otherwise first entry
   if (nsCredentialsList.value?.length) {
-    const sandbox = nsCredentialsList.value.find((c: any) => c.accountType === 'sandbox');
+    const sandbox = nsCredentialsList.value.find((nsCredential: any) => nsCredential.accountType === 'sandbox');
     selectedNSAccount.value = sandbox?.systemMessageRemoteId || nsCredentialsList.value[0].systemMessageRemoteId;
   }
 }
@@ -733,9 +730,9 @@ async function openReturnStatusModal(returnMap: any) {
   }
 }
 
-async function getLoopReturnStatusCount(params: string) {
+async function getLoopReturnStatusCount(systemMessageRemoteId: string) {
   try {
-      const response = await UserService.getLoopReturnStatusCount(params)
+      const response = await UserService.getLoopReturnStatusCount(systemMessageRemoteId)
       if (!hasError(response)) {
         returnCount.value = response.data.returnCountMap
         returnTotalCount.value = response.data.returnCountMap.open + response.data.returnCountMap.closed + response.data.returnCountMap.failed
