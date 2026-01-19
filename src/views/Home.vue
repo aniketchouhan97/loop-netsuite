@@ -625,7 +625,7 @@ async function postAPIKey(credentials: any) {
     const alert = await alertController.create({
       header: translate('Refresh API Key'),
       message: `
-        An API Key has been generated for Account Id <b>${credentials.remoteId}</b>.<br/><br/>
+        An API Key has been generated for NetSuite Account ID <b>${credentials.remoteId}</b>.<br/><br/>
         Please copy and save this key now — it will only be shown once.<br/>
         Use this key to create an API Secret record in NetSuite.<br/><br/>
         <b>Your API Key is:</b> ${response.loginKey}
